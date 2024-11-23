@@ -89,9 +89,9 @@ class Program
     {
         foreach (var line in details)
         {
-            if (Regex.IsMatch(line, pattern, RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(line, pattern, RegexOptions.IgnoreCase| RegexOptions.IgnorePatternWhitespace| RegexOptions.Multiline))
             {
-                return Regex.Match(line, pattern, RegexOptions.IgnoreCase).Value;
+                return Regex.Match(line, pattern, RegexOptions.IgnoreCase| RegexOptions.Multiline).Value;
             }
         }
         return string.Empty;
@@ -111,6 +111,26 @@ class Program
                 if (count == index)
                 {
                     return DateTime.Parse(Regex.Match(line, datePattern).Value);
+                }
+                count++;
+            }
+        }
+
+        return null;
+    }
+
+    public static string? ExtractGender(string[] details, int index)
+    {
+        var datePattern = @"\s+.*?(?=\d{2}\.\d{2}\.\d{4})";
+        int count = 0;
+
+        foreach (var line in details)
+        {
+            if (Regex.IsMatch(line, datePattern))
+            {
+                if (count == index)
+                {
+                    return Regex.Match(line, datePattern).Value.Trim();
                 }
                 count++;
             }
@@ -148,7 +168,7 @@ class Program
             var countPeople = Convert.ToInt16(ExtractDetails(details,@"\d+(?=\s*\D*$)").Trim());
             
             //парсинг гендера(не доделано)
-            var gender = ExtractDetails(details,@"(?<=[A-ZА-ЯЁ\s])(.*?)(?=\d{4}-\d{2}-\d{2})").Trim();
+            var gender = ExtractDetails(details,@"(женщины|мужчины|юноши|девушки|юниоры|мальчики|девочки|юниорки)(?:,?\s*(женщины|мужчины|юноши|девушки|юниоры|мальчики|девочки|юниорки))*");
             
             //парсинг окончания периода
             var endDate = ExtractDate(details, 1);
@@ -159,9 +179,9 @@ class Program
             //парсинг отдельно города
             var city = ExtractDetails(details, @"(?<=,\s+(?:г\.\s|Город\s))([\p{L}\s\-]+)").Trim(); 
 
-            var program  = ExtractDetails(details, @"(?:г\.?|город)\s+\S+([^\r\n]*?)(?=[Дд]исциплина)").Trim();
+            var program  = ExtractDetails(details, @"(?:(?<=КЛАСС\s\-)|(?<=КЛАСС\s)[^\n,]+)(?=.*[Дд]исциплина|$)").Trim();
             
-            var discyplinе = ExtractDetails(details, @"(?<=[Дд]исциплина\s)[^\n\r]+").Trim();
+            var discyplinе = ExtractDetails(details, @"(?<=[Дд]исциплина\s)[A-Z0-9]+(-[A-Z0-9]+)*").Trim();
 
 
             events.Add(new Event
