@@ -26,7 +26,7 @@ class Program
 
         List<string> CompeteFile = new List<string>();
 
-        using (var pdf = new PdfDocument("Z:/VisualCodeProjects/ParsingPDF/II_chast_EKP_2024_14_11_24_65c6deea36.pdf"))
+        using (var pdf = new PdfDocument("../Resource/II_chast_EKP_2024_14_11_24_65c6deea36.pdf"))
         {
             // преобразование pdf в текст и удаление надпичей о страница
             
@@ -35,12 +35,9 @@ class Program
             formattedText =  Regex.Replace(formattedText, @"Стр\.\s+\d+\s+из\s+\d+", string.Empty);
 
             //сохранение текста для дальнейшей работы
-            string pathRaw = "Z:/VisualCodeProjects/ParsingPDF/ParsingPDF/rawText.txt";
+            string pathRaw = "../TextFiles/rawText.txt";
             
-            //файл уже отпарсенный
-            string pathFormated = "Z:/VisualCodeProjects/ParsingPDF/ParsingPDF/FormatedText.txt";
-            
-            string pathCompleted = "Z:/VisualCodeProjects/ParsingPDF/ParsingPDF/CompletedText.txt";
+            string pathCompleted = "../TextFiles/CompletedText.txt";
 
             File.WriteAllText(pathRaw, formattedText);    
            
@@ -49,7 +46,7 @@ class Program
             string file = File.ReadAllText(pathRaw);
             string pattern = @"Основной состав\s*(?<Data>[\s\S]+?)(?=Основной состав|\z)";
         
-            string pathType = "Z:/VisualCodeProjects/ParsingPDF/ParsingPDF/TypeText.txt";
+            string pathType = "../TextFiles/TypeText.txt";
         
             ParseEventeType(file,allEventsType);
         
@@ -60,7 +57,7 @@ class Program
             {
                 string list = match.Groups["Data"].Value.Trim();
 
-                events = ListEvent(list.Trim(),pathFormated,idTypeEvent,allEvents);
+                events = ListEvent(list.Trim(),idTypeEvent,allEvents);
                 
                 foreach(var evt in events)
                 {
@@ -114,7 +111,7 @@ class Program
         return null;
     }
 
-    public static List<Event> ListEvent(string list,string path, int typeId, List<Event> allEvents)
+    public static List<Event> ListEvent(string list, int typeId, List<Event> allEvents)
     {
         string patternEvent = @"
                 (?<ID>\d{16})\s*           # Идентификатор
