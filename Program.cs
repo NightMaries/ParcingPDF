@@ -13,7 +13,6 @@ using OpenQA.Selenium.DevTools.V128.DOMDebugger;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Misc;
 
-
 class Program
 {
     static void Main(string[] args)
@@ -52,7 +51,6 @@ class Program
         
             string pathType = "Z:/VisualCodeProjects/ParsingPDF/ParsingPDF/TypeText.txt";
         
-        
             ParseEventeType(file,allEventsType);
         
             List<string> file2 = new List<string>();
@@ -82,8 +80,6 @@ class Program
         }
     }
     
-   
-
     // Извлечение определенных данных из строк по шаблону
     public static string ExtractDetails(string[] details, string pattern)
     {
@@ -96,7 +92,6 @@ class Program
         }
         return string.Empty;
     }
-
 
     // Извлечение даты из строки
     public static DateTime? ExtractDate(string[] details, int index)
@@ -118,27 +113,6 @@ class Program
 
         return null;
     }
-
-    public static string? ExtractGender(string[] details, int index)
-    {
-        var datePattern = @"\s+.*?(?=\d{2}\.\d{2}\.\d{4})";
-        int count = 0;
-
-        foreach (var line in details)
-        {
-            if (Regex.IsMatch(line, datePattern))
-            {
-                if (count == index)
-                {
-                    return Regex.Match(line, datePattern).Value.Trim();
-                }
-                count++;
-            }
-        }
-
-        return null;
-    }
-
 
     public static List<Event> ListEvent(string list,string path, int typeId, List<Event> allEvents)
     {
@@ -183,7 +157,6 @@ class Program
             
             var discyplinе = ExtractDetails(details, @"(?<=[Дд]исциплина\s)[A-Z0-9]+(-[A-Z0-9]+)*").Trim();
 
-
             events.Add(new Event
             {
                 Id = match.Groups["ID"].Value,
@@ -201,23 +174,14 @@ class Program
             });
         }
         
-
-
         // Вывод результата
         foreach (var evt in events)
         {
             allEvents.Add(evt);
         }
-           /* formatedFile.Add($"TypeName = {evt.TypeId} \nID: {evt.ID} \n\tName = {evt.Name} \n\tStartDate = {evt.StartDate}\n\t Country = {evt.Country}\n\t"+
-                    $"CountPeople = {evt.CountPeople}\n\t Gender = {evt.Gender}\n\t EndDate = {evt.EndDate}\n\t Region = {evt.Region}\n\t City = {evt.City} ");
-            /*Console.WriteLine($"TypeName = {evt.TypeId} \nID: {evt.ID} \tName = {evt.Name} \tStartDate = {evt.StartDate}\t Country = {evt.Country}\t"+
-                    $"CountPeople = {evt.CountPeople} \tGender = {evt.Gender}\t EndDate = {evt.EndDate}\t Region = {evt.Region}\t City = {evt.City} ");
-            File.WriteAllLines(path,formatedFile);
-            */
         
         return events;
     }
-
 
     public static void ParseEventeType(string file,List<EventType> allEventsType)
     {
@@ -243,7 +207,6 @@ class Program
                 }
 
             }
-
 
             List<string> eventTypeText = new List<string>();
 
@@ -290,6 +253,3 @@ class Event
     public string Discipline {get; set;}
     
 }
-
-
-
